@@ -1,6 +1,7 @@
 package com.moskaoud.room;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -28,5 +29,21 @@ class WordRepository {
         WordRoomDatabase.databaseWriteExecutor.execute(() -> {
             mWordDao.insert(word);
         });
+        //new insertAsyncTask(mWordDao).execute(word);
+    }
+
+    private static class insertAsyncTask extends AsyncTask<Word, Void, Void> {
+
+        private WordDao mAsyncTaskDao;
+
+        insertAsyncTask(WordDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Word... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
     }
 }
